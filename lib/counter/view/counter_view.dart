@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/counter_event.dart';
+import 'counter_view2.dart';
 
 
 class CounterView extends StatelessWidget {
@@ -28,7 +29,7 @@ class CounterView extends StatelessWidget {
       ),
 
       body: Column(
-       
+       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           
           Expanded(
@@ -52,15 +53,40 @@ class CounterView extends StatelessWidget {
             child: BlocBuilder<CounterBloc, CounterState>(
               builder: (context, state) {
                 log("bloc builder calişti");
-                return ListView.builder(
-                  itemCount: context.read<CounterBloc>().state.kullanicininSectikleri.length,
-                  itemBuilder: (context, index) {
-                    return Text(context.read<CounterBloc>().state.kullanicininSectikleri[index]);
+                return Builder(
+                  builder: (context) {
+                    return ListView.builder(
+                      itemCount: context.read<CounterBloc>().state.kullanicininSectikleri.length,
+                      itemBuilder: (context, index) {
+                        return Text(context.read<CounterBloc>().state.kullanicininSectikleri[index]);
+                      },
+                    ); 
                   },
+                 
                 );
               },
               
             ),
+          ),
+
+          OutlinedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) {
+                    return BlocProvider.value(
+                      value: BlocProvider.of<CounterBloc>(context, listen: false),
+                      child: const CounterView2(),
+                    );
+                  },
+                )
+              );
+            },
+            icon: const Icon(
+              Icons.keyboard_arrow_right_outlined
+            ),
+            label: const Text("sonraki sayfaya git")
           )
           
         ],
